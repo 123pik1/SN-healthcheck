@@ -1,0 +1,16 @@
+
+
+defaults:
+  enabled: false
+
+instances:
+  - instance:
+      instance_url: "example_url"
+      endpoint: "example_endpoint"
+
+      rules:
+        - name: "sysevent_pending"
+          json_path: "result.sysevent.pending_count"
+          warning_threshold: 100
+          critical_threshold: 200
+          enabled: true
