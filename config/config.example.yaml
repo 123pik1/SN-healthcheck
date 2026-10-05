@@ -8,15 +8,15 @@ defaults:
   enabled: false
 
 instances:
-  - instance:
-      instance_url: SN_INSTANCE_URL
-      endpoint: SN_API_URL
-      api_key: SN_API_KEY
+  - instance_url: SN_INSTANCE_URL
+    endpoint: SN_API_URL
+    api_key: SN_API_KEY
 
 
-      rules:
-        - name: "sysevent_pending"
-          json_path: "result.sysevent.pending_count"
-          warning_threshold: 100
-          critical_threshold: 200
-          enabled: true
+    checks:
+      - name: "sysevent_pending"
+        description: "Too many events are pending"
+        json_path: "result.sysevent.pending_count"
+        warning_threshold: 100
+        critical_threshold: 200
+        enabled: true

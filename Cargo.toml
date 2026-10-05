@@ -5,4 +5,5 @@ edition = "2024"
 
 [dependencies]
 dotenvy = "0.15.7"
-serde = "1.0.229"
+serde = {version = "1.0.229", features = ["derive"]}
+serde_yaml = "0.9.34"
