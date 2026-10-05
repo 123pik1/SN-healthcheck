@@ -1,12 +1,18 @@
 
 
 defaults:
+  # Name of the variable - yaml does not contain confidential data
+  api_key: SN_API_KEY
+  instance_url: SN_INSTANCE_URL
+  endpoint: SN_API_URL
   enabled: false
 
 instances:
   - instance:
-      instance_url: "example_url"
-      endpoint: "example_endpoint"
+      instance_url: SN_INSTANCE_URL
+      endpoint: SN_API_URL
+      api_key: SN_API_KEY
+
 
       rules:
         - name: "sysevent_pending"
