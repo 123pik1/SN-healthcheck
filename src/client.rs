@@ -44,7 +44,9 @@ impl Client {
                     answer: Some(value),
                 };
             }
-            current_timeout += self.timeout_increase;
+            if self.do_increase_timeout_after_fail {
+                current_timeout += self.timeout_increase;
+            }
         }
 
         RequestAnswer {
