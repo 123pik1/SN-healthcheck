@@ -9,6 +9,7 @@ pub struct Settings {
     pub sn_api_key: String,
     pub sn_instance_url: String,
     pub sn_api_url: String,
+    pub sn_api_key_header: String,
 }
 
 impl Settings {
@@ -35,6 +36,8 @@ impl Settings {
             sn_api_key: env::var("SN_API_KEY").unwrap_or("".to_string()),
             sn_instance_url: env::var("SN_INSTANCE_URL").unwrap_or("".to_string()),
             sn_api_url: env::var("SN_API_URL").unwrap_or("".to_string()),
+            sn_api_key_header: env::var("SN_API_KEY_HEADER_NAME")
+                .unwrap_or("SN-API-KEY".to_string()),
         }
     }
 }

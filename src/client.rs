@@ -1,13 +1,12 @@
 use std::time::Duration;
 
-use reqwest::{Url, header};
-use serde_json::Value;
+use reqwest::header;
 
-use crate::{client, settings::Settings};
+use crate::settings::Settings;
 
 pub struct RequestAnswer {
     pub times_requested: u32,
-    pub answer: serde_json::Value,
+    pub answer: Option<serde_json::Value>,
 }
 
 pub struct Client {
@@ -18,6 +17,7 @@ pub struct Client {
     timeout_increase: u64,
     do_increase_timeout_after_fail: bool,
     timeout_max_increase_times: u32,
+    api_key_header_name: String,
 }
 
 impl Client {
@@ -30,15 +30,26 @@ impl Client {
             timeout_increase: settings.timeout_increase,
             do_increase_timeout_after_fail: settings.do_increase_timeout_after_fail,
             timeout_max_increase_times: settings.timeout_max_increase_times,
+            api_key_header_name: settings.sn_api_key_header,
         }
     }
 
     pub fn get_stats(&self) -> RequestAnswer {
-        let mut times_counter: u32 = 0;
+        let mut current_timeout = self.timeout;
+
+        for times in 0..self.timeout_max_increase_times {
+            if let Some(value) = self.request(current_timeout) {
+                return RequestAnswer {
+                    times_requested: times + 1,
+                    answer: Some(value),
+                };
+            }
+            current_timeout += self.timeout_increase;
+        }
 
         RequestAnswer {
-            times_requested: times_counter,
-            answer: self.request(5).unwrap(),
+            times_requested: self.timeout_max_increase_times,
+            answer: None,
         }
     }
 
@@ -54,7 +65,7 @@ impl Client {
 
         let response = client
             .get(url)
-            .header("X-API-key", &self.api_key)
+            .header(&self.api_key_header_name, &self.api_key)
             .header(header::ACCEPT, "application/json")
             .send()
             .ok()?
