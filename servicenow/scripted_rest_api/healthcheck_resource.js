@@ -8,5 +8,6 @@
  */
 (function process(/*RESTAPIRequest*/ request, /*RESTAPIResponse*/ response) {
     response.setStatus(200);
+    // there would be two result layers in answer if not this .result
     response.setBody(new SystemHealthcheck().getHealthcheck().result);
 })(request, response);
