@@ -205,6 +205,10 @@ SN_API_URL=api/x_sn_healthcheck/healthcheck
 SN_API_KEY_HEADER_NAME=SN-API-KEY
 ```
 
+Do not use `http://` for `SN_INSTANCE_URL`. The instance URL may include a
+trailing slash; the client removes duplicate slashes when joining it with
+`SN_API_URL`.
+
 ### 4. Test the PDI endpoint
 
 Before running the Rust client, test the endpoint with:

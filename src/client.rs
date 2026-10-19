@@ -56,23 +56,46 @@ impl Client {
     }
 
     fn request(&self, timeout: u64) -> Option<serde_json::Value> {
-        let url = format!("{}/{}", self.instance_url, self.api_url);
+        let instance_url = if self.instance_url.starts_with("http://")
+            || self.instance_url.starts_with("https://")
+        {
+            self.instance_url.trim_end_matches('/').to_string()
+        } else {
+            format!("https://{}", self.instance_url.trim_end_matches('/'))
+        };
+        let url = format!("{}/{}", instance_url, self.api_url.trim_start_matches('/'));
 
         let client = reqwest::blocking::Client::builder()
             .timeout(Duration::from_secs(timeout))
             .build()
+            .map_err(|error| eprintln!("Could not build HTTP client: {error}"))
             .ok()?;
 
-        println!("Request sending with timeout {}", timeout);
+        println!("Sending request to {url} with timeout {timeout}s");
 
         let response = client
             .get(url)
             .header(&self.api_key_header_name, &self.api_key)
             .header(header::ACCEPT, "application/json")
             .send()
-            .ok()?
-            .json::<serde_json::Value>()
+            .map_err(|error| eprintln!("Request failed before receiving a response: {error}"))
             .ok()?;
+
+        let status = response.status();
+        let body = response
+            .text()
+            .map_err(|error| eprintln!("Could not read response body: {error}"))
+            .ok()?;
+
+        if !status.is_success() {
+            eprintln!("ServiceNow returned {status}: {body}");
+            return None;
+        }
+
+        let response = serde_json::from_str(&body)
+            .map_err(|error| eprintln!("Invalid JSON response: {error}; body: {body}"))
+            .ok()?;
+
         Some(response)
     }
 }
