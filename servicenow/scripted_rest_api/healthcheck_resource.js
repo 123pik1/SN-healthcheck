@@ -8,5 +8,5 @@
  */
 (function process(/*RESTAPIRequest*/ request, /*RESTAPIResponse*/ response) {
     response.setStatus(200);
-    response.setBody(new SystemHealthcheck().getHealthcheck());
+    response.setBody(new SystemHealthcheck().getHealthcheck().result);
 })(request, response);
