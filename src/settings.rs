@@ -1,13 +1,14 @@
 use std::env;
 
-use serde::de::value;
-
 pub struct Settings {
     pub config_path: String,
     pub timeout: u64,
     pub timeout_increase: u64,
     pub do_increase_timeout_after_fail: bool,
     pub timeout_max_increase_times: u32,
+    pub sn_api_key: String,
+    pub sn_instance_url: String,
+    pub sn_api_url: String,
 }
 
 impl Settings {
@@ -31,6 +32,9 @@ impl Settings {
                 .ok()
                 .and_then(|str| str.parse().ok())
                 .unwrap_or(5),
+            sn_api_key: env::var("SN_API_KEY").unwrap_or("".to_string()),
+            sn_instance_url: env::var("SN_INSTANCE_URL").unwrap_or("".to_string()),
+            sn_api_url: env::var("SN_API_URL").unwrap_or("".to_string()),
         }
     }
 }

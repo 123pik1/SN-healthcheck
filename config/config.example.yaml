@@ -16,7 +16,7 @@ instances:
     checks:
       - name: "sysevent_pending"
         description: "Too many events are pending"
-        json_path: "result.sysevent.pending_count"
+        json_path: "/result/sysevent/pending_count"
         warning_threshold: 100
         critical_threshold: 200
         enabled: true
