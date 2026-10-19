@@ -224,3 +224,55 @@ problems, requested approvals, failed scheduled jobs, and in-progress update
 sets. Add checks for these metrics in `config/config.yaml` using JSON Pointer
 paths such as `/result/incident/open_count` and
 `/result/approval/pending_count`.
+
+### 5. Move the integration with an Update Set
+
+The Update Set should contain the ServiceNow configuration:
+
+- `SystemHealthcheck` Script Include
+- Scripted REST API
+- Scripted REST Resource
+- API Access Policy
+- inbound authentication profile
+- HTTP API-key authentication profile
+- REST endpoint ACL
+- `x_sn_healthcheck.reader` role and its ACL role mapping
+- any required ECC or cryptographic policy records
+
+Before committing the Update Set, verify that the Scripted REST Resource
+contains:
+
+```javascript
+response.setBody(new SystemHealthcheck().getHealthcheck().result);
+```
+
+On the target instance, create or verify these items manually:
+
+```text
+User ID: sn_healthcheck
+Active: true
+Web service access only: true
+Role: x_sn_healthcheck.reader
+```
+
+Create a new API key for that user on the target instance and configure it in
+the Rust client's `.env` file. Do not put the API-key secret, user password, or
+other credentials into the Update Set.
+
+After installing and committing the Update Set on the target instance:
+
+1. Verify the API Access Policy points to the correct Scripted REST API.
+2. Verify the API-key authentication profile is attached to the policy.
+3. Verify the REST endpoint ACL authorizes the integration user.
+4. Create or activate the dedicated `sn_healthcheck` user.
+5. Create the target-instance API key and configure `SN_API_KEY`.
+6. Test the endpoint with `curl` before running the Rust client.
+
+The namespace and API path can differ between instances. Use the path shown
+by the target instance's Scripted REST API record, for example:
+
+```dotenv
+SN_INSTANCE_URL=https://<target-instance>.service-now.com
+SN_API_URL=api/2244623/healthcheck
+SN_API_KEY_HEADER_NAME=x-sn-apikey
+```
