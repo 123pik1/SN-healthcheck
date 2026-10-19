@@ -21,3 +21,45 @@ instances:
         critical_threshold: 200
         operator: "HIGHER_OR_EQUAL"
         enabled: true
+      - name: "incidents_open"
+        description: "Too many incidents are open"
+        json_path: "/result/incident/open_count"
+        warning_threshold: 100
+        critical_threshold: 200
+        operator: "HIGHER_OR_EQUAL"
+        enabled: true
+      - name: "changes_open"
+        description: "Too many changes are open"
+        json_path: "/result/change/open_count"
+        warning_threshold: 50
+        critical_threshold: 100
+        operator: "HIGHER_OR_EQUAL"
+        enabled: true
+      - name: "problems_open"
+        description: "Too many problems are open"
+        json_path: "/result/problem/open_count"
+        warning_threshold: 25
+        critical_threshold: 50
+        operator: "HIGHER_OR_EQUAL"
+        enabled: true
+      - name: "approvals_pending"
+        description: "Too many approvals are pending"
+        json_path: "/result/approval/pending_count"
+        warning_threshold: 100
+        critical_threshold: 200
+        operator: "HIGHER_OR_EQUAL"
+        enabled: true
+      - name: "scheduled_jobs_failed"
+        description: "Scheduled jobs are failing"
+        json_path: "/result/scheduled_job/failed_count"
+        warning_threshold: 1
+        critical_threshold: 5
+        operator: "HIGHER_OR_EQUAL"
+        enabled: true
+      - name: "update_sets_in_progress"
+        description: "Too many update sets are in progress"
+        json_path: "/result/update_set/in_progress_count"
+        warning_threshold: 2
+        critical_threshold: 5
+        operator: "HIGHER_OR_EQUAL"
+        enabled: true
