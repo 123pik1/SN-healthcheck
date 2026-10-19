@@ -19,4 +19,5 @@ instances:
         json_path: "/result/sysevent/pending_count"
         warning_threshold: 100
         critical_threshold: 200
+        operator: "HIGHER_OR_EQUAL"
         enabled: true
