@@ -16,9 +16,9 @@ pub struct Check {
 /// instance_url, endpoint and api_key are the names of environmental variables
 #[derive(Debug, Deserialize)]
 pub struct InstanceConfig {
-    instance_url: String,
-    endpoint: String,
-    api_key: String,
+    pub instance_url: String,
+    pub endpoint: String,
+    pub api_key: String,
 
     checks: Vec<Check>,
 }
@@ -38,7 +38,7 @@ pub struct ConfigFile {
 }
 
 impl ConfigFile {
-    pub fn load_from_yaml(filepath: String) -> ConfigFile {
+    pub fn load_from_yaml(filepath: &str) -> ConfigFile {
         let file = File::open(filepath).expect("No file found");
         let config: ConfigFile =
             serde_yaml::from_reader(file).expect("There was an error reading a file");

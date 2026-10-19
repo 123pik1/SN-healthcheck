@@ -1,5 +1,6 @@
 use std::env;
 
+#[derive(Debug, Clone)]
 pub struct Settings {
     pub config_path: String,
     pub timeout: u64,
